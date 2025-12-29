@@ -11,7 +11,6 @@
                 <p>Add, edit, or remove properties from your platform</p>
             </div>
             <div class="header-actions">
-                <a asp-controller="Dashboard" asp-action="ImportStaticData" class="btn-secondary">Import Static</a>
                 <a asp-controller="Dashboard" asp-action="AddProperty" class="btn-primary">+ Add Property</a>
             </div>
         </div>
@@ -58,10 +57,9 @@
                     <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
                 </svg>
                 <h3>No Properties Yet</h3>
-                <p>Start by adding properties or importing from static data.</p>
+                <p>Start by adding your first property.</p>
                 <div class="empty-actions">
                     <a asp-controller="Dashboard" asp-action="AddProperty" class="btn-primary">Add Property</a>
-                    <a asp-controller="Dashboard" asp-action="ImportStaticData" class="btn-secondary">Import Static Data</a>
                 </div>
             </div>
         }
