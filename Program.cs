@@ -58,9 +58,12 @@ builder.Services.AddSession(options =>
 
 var app = builder.Build();
 
-// Seed roles and admin user
+// Auto-migrate database and seed data
 using (var scope = app.Services.CreateScope())
 {
+    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    db.Database.Migrate();
+
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
