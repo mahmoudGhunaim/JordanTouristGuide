@@ -1,0 +1,79 @@
+@model IEnumerable<JordanTouristGuide.Models.Contact>
+@{
+    ViewData["Title"] = "Contact Messages";
+}
+
+<section class="section">
+    <div class="container">
+        <div class="admin-header">
+            <h1 class="section-title">Contact Messages</h1>
+            <div class="admin-header-buttons">
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </a>
+                <a asp-action="Logout" class="btn btn-logout">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </div>
+        </div>
+
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success">
+                @TempData["Success"]
+            </div>
+        }
+
+        @if (!Model.Any())
+        {
+            <div class="empty-state">
+                <i class="fas fa-inbox"></i>
+                <h3>No Messages Yet</h3>
+                <p>When visitors send messages through the contact form, they will appear here.</p>
+            </div>
+        }
+        else
+        {
+            <div class="contacts-grid">
+                @foreach (var contact in Model)
+                {
+                    <div class="contact-card">
+                        <div class="contact-card-header">
+                            <h3>@contact.Subject</h3>
+                            <span class="contact-date">@contact.SubmittedDate.ToString("MMM dd, yyyy HH:mm")</span>
+                        </div>
+                        <div class="contact-card-body">
+                            <div class="contact-info-row">
+                                <i class="fas fa-user"></i>
+                                <span>@contact.FullName</span>
+                            </div>
+                            <div class="contact-info-row">
+                                <i class="fas fa-envelope"></i>
+                                <a href="mailto:@contact.Email">@contact.Email</a>
+                            </div>
+                            <div class="contact-info-row">
+                                <i class="fas fa-phone"></i>
+                                <a href="tel:@contact.Phone">@contact.Phone</a>
+                            </div>
+                            <div class="contact-message">
+                                <strong>Message:</strong>
+                                <p>@contact.Message</p>
+                            </div>
+                        </div>
+                        <div class="contact-card-footer">
+                            <form asp-action="DeleteContact" method="post" onsubmit="return confirm('Are you sure you want to delete this message?');">
+                                <input type="hidden" name="id" value="@contact.Id" />
+                                <button type="submit" class="btn-delete">
+                                    <i class="fas fa-trash"></i> Delete
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="table-summary">
+                <p>Showing @Model.Count() message(s)</p>
+            </div>
+        }
+    </div>
+</section>

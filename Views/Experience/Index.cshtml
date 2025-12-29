@@ -1,0 +1,62 @@
+@model IEnumerable<JordanTouristGuide.Models.ExperienceDb>
+@{
+    ViewData["Title"] = "Experiences";
+}
+
+<section class="section">
+    <div class="container">
+        <h1 class="section-title">Unforgettable Experiences in Jordan</h1>
+        <p style="text-align: center; color: var(--text-gray); margin-bottom: 3rem;">
+            Discover the best activities, tours, and places to visit
+        </p>
+
+        @if (Model.Any())
+        {
+            <div class="grid grid-3">
+                @foreach (var experience in Model)
+                {
+                    <div class="experience-card">
+                        <img src="@experience.ImageUrl" alt="@experience.Title" onerror="this.src='/images/placeholder.jpg'">
+                        <div class="experience-overlay">
+                            <span class="experience-category">@experience.Category</span>
+                            <h3 class="experience-title">@experience.Title</h3>
+                            <p>@(experience.Description.Length > 150 ? experience.Description.Substring(0, 150) + "..." : experience.Description)</p>
+                            <div class="experience-meta">
+                                <span><i class="fas fa-map-marker-alt"></i> @experience.Location</span>
+                                <span><i class="fas fa-clock"></i> @experience.Duration</span>
+                            </div>
+                            @if (experience.Price.HasValue)
+                            {
+                                <p style="color: #ac9576; font-weight: 600; margin-top: 10px;">$@experience.Price</p>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="empty-state" style="text-align: center; padding: 60px 20px;">
+                <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1.5">
+                    <circle cx="12" cy="12" r="10"/>
+                    <polygon points="10 8 16 12 10 16 10 8"/>
+                </svg>
+                <h3 style="color: #666; margin: 20px 0 10px;">No Experiences Available</h3>
+                <p style="color: #999;">Check back soon for amazing experiences!</p>
+            </div>
+        }
+    </div>
+</section>
+
+<section class="section" style="background-color: var(--bg-light);">
+    <div class="container">
+        <h2 class="section-title">Ready to Start Your Adventure?</h2>
+        <p style="text-align: center; color: var(--text-gray); margin-bottom: 2rem;">
+            Book your accommodation and let us help you plan your perfect Jordan itinerary
+        </p>
+        <div style="text-align: center;">
+            <a asp-controller="Property" asp-action="Index" class="btn" style="margin-right: 1rem;">Browse Hotels</a>
+            <a asp-controller="Contact" asp-action="Index" class="btn btn-secondary">Contact Us</a>
+        </div>
+    </div>
+</section>

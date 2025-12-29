@@ -1,0 +1,377 @@
+@model List<JordanTouristGuide.Models.Booking>
+@{
+    ViewData["Title"] = "My Dashboard";
+    var user = ViewBag.User as JordanTouristGuide.Models.ApplicationUser;
+}
+
+<div class="dashboard-page">
+    <div class="dashboard-container">
+        <div class="dashboard-header">
+            <div class="user-info">
+                @if (!string.IsNullOrEmpty(user?.ProfilePictureUrl))
+                {
+                    <img src="@user.ProfilePictureUrl" alt="Profile" class="profile-picture" referrerpolicy="no-referrer" />
+                }
+                else
+                {
+                    <div class="profile-placeholder">
+                        @(user?.FullName?.Substring(0, 1).ToUpper() ?? "U")
+                    </div>
+                }
+                <div class="user-details">
+                    <h1>Welcome, @user?.FullName</h1>
+                    <p>@user?.Email</p>
+                </div>
+            </div>
+            @if (User.IsInRole("Admin"))
+            {
+                <a asp-controller="Dashboard" asp-action="Admin" class="btn-admin">Admin Dashboard</a>
+            }
+        </div>
+
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success">@TempData["Success"]</div>
+        }
+
+        <div class="dashboard-section">
+            <h2>My Bookings</h2>
+
+            @if (Model.Any())
+            {
+                <div class="bookings-grid">
+                    @foreach (var booking in Model)
+                    {
+                        <div class="booking-card">
+                            <div class="booking-header">
+                                <h3>@booking.HotelName</h3>
+                                <span class="status status-@booking.Status.ToLower()">@booking.Status</span>
+                            </div>
+                            <div class="booking-details">
+                                <div class="detail-row">
+                                    <span class="label">Check-in:</span>
+                                    <span class="value">@booking.CheckInDate.ToString("MMM dd, yyyy")</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="label">Check-out:</span>
+                                    <span class="value">@booking.CheckOutDate.ToString("MMM dd, yyyy")</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="label">Guests:</span>
+                                    <span class="value">@booking.NumberOfGuests</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="label">Booked on:</span>
+                                    <span class="value">@booking.BookingDate.ToString("MMM dd, yyyy")</span>
+                                </div>
+                                @if (!string.IsNullOrEmpty(booking.SpecialRequests))
+                                {
+                                    <div class="detail-row special-requests">
+                                        <span class="label">Special Requests:</span>
+                                        <span class="value">@booking.SpecialRequests</span>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="no-bookings">
+                    <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1.5">
+                        <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+                    </svg>
+                    <h3>No Bookings Yet</h3>
+                    <p>You haven't made any bookings. Start exploring our properties!</p>
+                    <a asp-controller="Property" asp-action="Index" class="btn-explore">Browse Properties</a>
+                </div>
+            }
+        </div>
+
+        <div class="quick-links">
+            <h2>Quick Links</h2>
+            <div class="links-grid">
+                <a asp-controller="Property" asp-action="Index" class="link-card">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                    </svg>
+                    <span>Browse Properties</span>
+                </a>
+                <a asp-controller="Experience" asp-action="Index" class="link-card">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <polygon points="10 8 16 12 10 16 10 8"/>
+                    </svg>
+                    <span>Explore Experiences</span>
+                </a>
+                <a asp-controller="Contact" asp-action="Index" class="link-card">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                        <polyline points="22,6 12,13 2,6"/>
+                    </svg>
+                    <span>Contact Us</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .dashboard-page {
+        background: #f5f5f5;
+        min-height: calc(100vh - 100px);
+        padding: 40px 20px;
+    }
+
+    .dashboard-container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .dashboard-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: white;
+        padding: 30px;
+        border-radius: 12px;
+        margin-bottom: 30px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .user-info {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .profile-picture {
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid #ac9576;
+    }
+
+    .profile-placeholder {
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        background: #ac9576;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        font-weight: 600;
+    }
+
+    .user-details h1 {
+        margin: 0 0 5px 0;
+        font-size: 1.5rem;
+        color: #222933;
+    }
+
+    .user-details p {
+        margin: 0;
+        color: #666;
+    }
+
+    .btn-admin {
+        background: #222933;
+        color: white;
+        padding: 12px 24px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .btn-admin:hover {
+        background: #1a1f27;
+        transform: translateY(-2px);
+    }
+
+    .alert-success {
+        background: #d4edda;
+        color: #155724;
+        padding: 15px 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        border-left: 4px solid #28a745;
+    }
+
+    .dashboard-section {
+        background: white;
+        padding: 30px;
+        border-radius: 12px;
+        margin-bottom: 30px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    .dashboard-section h2 {
+        color: #222933;
+        margin-bottom: 25px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid #f0f0f0;
+    }
+
+    .bookings-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 20px;
+    }
+
+    .booking-card {
+        border: 1px solid #e0e0e0;
+        border-radius: 10px;
+        padding: 20px;
+        transition: all 0.3s ease;
+    }
+
+    .booking-card:hover {
+        border-color: #ac9576;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .booking-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 15px;
+        gap: 10px;
+    }
+
+    .booking-header h3 {
+        margin: 0;
+        color: #222933;
+        font-size: 1.1rem;
+    }
+
+    .status {
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        text-transform: capitalize;
+    }
+
+    .status-pending { background: #fff3cd; color: #856404; }
+    .status-confirmed { background: #d4edda; color: #155724; }
+    .status-cancelled { background: #f8d7da; color: #721c24; }
+    .status-completed { background: #cce5ff; color: #004085; }
+
+    .booking-details {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .detail-row {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.95rem;
+    }
+
+    .detail-row .label {
+        color: #666;
+    }
+
+    .detail-row .value {
+        color: #222933;
+        font-weight: 500;
+    }
+
+    .special-requests {
+        flex-direction: column;
+        gap: 5px;
+        padding-top: 10px;
+        border-top: 1px dashed #eee;
+    }
+
+    .special-requests .value {
+        font-weight: normal;
+        font-style: italic;
+    }
+
+    .no-bookings {
+        text-align: center;
+        padding: 50px 20px;
+    }
+
+    .no-bookings h3 {
+        color: #666;
+        margin: 20px 0 10px;
+    }
+
+    .no-bookings p {
+        color: #999;
+        margin-bottom: 20px;
+    }
+
+    .btn-explore {
+        display: inline-block;
+        background: #ac9576;
+        color: white;
+        padding: 12px 30px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .btn-explore:hover {
+        background: #8a7860;
+    }
+
+    .quick-links h2 {
+        color: #222933;
+        margin-bottom: 20px;
+    }
+
+    .links-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+    }
+
+    .link-card {
+        background: white;
+        padding: 25px;
+        border-radius: 12px;
+        text-align: center;
+        text-decoration: none;
+        color: #222933;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        transition: all 0.3s ease;
+    }
+
+    .link-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        color: #ac9576;
+    }
+
+    .link-card svg {
+        margin-bottom: 10px;
+    }
+
+    .link-card span {
+        display: block;
+        font-weight: 500;
+    }
+
+    @@media (max-width: 768px) {
+        .dashboard-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .bookings-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>

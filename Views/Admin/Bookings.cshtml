@@ -1,0 +1,92 @@
+@model IEnumerable<JordanTouristGuide.Models.Booking>
+@{
+    ViewData["Title"] = "Manage Bookings";
+}
+
+<section class="section">
+    <div class="container">
+        <div class="admin-header">
+            <h1 class="section-title">Manage Bookings</h1>
+            <div class="admin-header-buttons">
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </a>
+                <a asp-action="Logout" class="btn btn-logout">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </div>
+        </div>
+
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success">
+                @TempData["Success"]
+            </div>
+        }
+
+        @if (!Model.Any())
+        {
+            <div class="empty-state">
+                <i class="fas fa-calendar-times"></i>
+                <h3>No Bookings Yet</h3>
+                <p>When customers make bookings, they will appear here.</p>
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Hotel</th>
+                            <th>Guest Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Check-in</th>
+                            <th>Check-out</th>
+                            <th>Guests</th>
+                            <th>Booked On</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var booking in Model)
+                        {
+                            <tr>
+                                <td>@booking.Id</td>
+                                <td><strong>@booking.HotelName</strong></td>
+                                <td>@booking.FullName</td>
+                                <td><a href="mailto:@booking.Email">@booking.Email</a></td>
+                                <td><a href="tel:@booking.Phone">@booking.Phone</a></td>
+                                <td>@booking.CheckInDate.ToString("MMM dd, yyyy")</td>
+                                <td>@booking.CheckOutDate.ToString("MMM dd, yyyy")</td>
+                                <td>@booking.NumberOfGuests</td>
+                                <td>@booking.BookingDate.ToString("MMM dd, yyyy HH:mm")</td>
+                                <td>
+                                    <form asp-action="DeleteBooking" method="post" class="delete-form" onsubmit="return confirm('Are you sure you want to delete this booking?');">
+                                        <input type="hidden" name="id" value="@booking.Id" />
+                                        <button type="submit" class="btn-delete" title="Delete">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            @if (!string.IsNullOrEmpty(booking.SpecialRequests))
+                            {
+                                <tr class="special-requests-row">
+                                    <td colspan="10">
+                                        <strong>Special Requests:</strong> @booking.SpecialRequests
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="table-summary">
+                <p>Showing @Model.Count() booking(s)</p>
+            </div>
+        }
+    </div>
+</section>

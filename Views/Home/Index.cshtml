@@ -1,0 +1,66 @@
+@model IEnumerable<JordanTouristGuide.Models.ExperienceDb>
+@{
+    ViewData["Title"] = "Home";
+}
+
+<section class="hero">
+    <div class="hero-content">
+        <h1>Discover Jordan</h1>
+        <p>Experience the magic of ancient wonders, breathtaking landscapes, and timeless beauty in the heart of the Middle East</p>
+        <div class="hero-buttons">
+            <a asp-controller="Property" asp-action="Index" class="btn">Explore Hotels</a>
+            <a asp-controller="Experience" asp-action="Index" class="btn btn-secondary">View Experiences</a>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <h2 class="section-title">Why Visit Jordan?</h2>
+        @if (Model.Any())
+        {
+            <div class="grid grid-3">
+                @foreach (var experience in Model)
+                {
+                    <div class="card">
+                        <img src="@experience.ImageUrl" alt="@experience.Title" class="card-image" onerror="this.src='/images/placeholder.jpg'">
+                        <div class="card-content">
+                            <h3 class="card-title">@experience.Title</h3>
+                            <p class="card-text">@(experience.Description.Length > 120 ? experience.Description.Substring(0, 120) + "..." : experience.Description)</p>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div style="text-align: center; padding: 40px;">
+                <p style="color: #666;">Explore our amazing experiences and hotels!</p>
+                <a asp-controller="Property" asp-action="Index" class="btn" style="margin-top: 20px;">Browse Hotels</a>
+            </div>
+        }
+    </div>
+</section>
+
+<section class="section" style="background-color: var(--bg-light);">
+    <div class="container">
+        <h2 class="section-title">Plan Your Journey</h2>
+        <div class="grid grid-2">
+            <div class="card">
+                <div class="card-content">
+                    <h3 class="card-title">Find Accommodation</h3>
+                    <p class="card-text">Browse through our curated selection of hotels and resorts across Jordan. From luxury properties in Amman to desert camps in Wadi Rum.</p>
+                    <a asp-controller="Property" asp-action="Index" class="btn">View Properties</a>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-content">
+                    <h3 class="card-title">Discover Experiences</h3>
+                    <p class="card-text">Find the best tours, activities, and experiences. From hiking in Dana Reserve to floating in the Dead Sea.</p>
+                    <a asp-controller="Experience" asp-action="Index" class="btn">Explore Experiences</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

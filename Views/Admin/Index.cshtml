@@ -1,0 +1,66 @@
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<section class="section">
+    <div class="container">
+        <div class="admin-header">
+            <h1 class="section-title">Admin Dashboard</h1>
+            <a asp-action="Logout" class="btn btn-logout">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+        </div>
+
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success">
+                @TempData["Success"]
+            </div>
+        }
+
+        <div class="admin-stats">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-calendar-check"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>@ViewBag.BookingsCount</h3>
+                    <p>Total Bookings</p>
+                </div>
+                <a asp-action="Bookings" class="stat-link">View All <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-envelope"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>@ViewBag.ContactsCount</h3>
+                    <p>Contact Messages</p>
+                </div>
+                <a asp-action="Contacts" class="stat-link">View All <i class="fas fa-arrow-right"></i></a>
+            </div>
+        </div>
+
+        <div class="admin-quick-links">
+            <h2>Quick Actions</h2>
+            <div class="quick-links-grid">
+                <a asp-action="Bookings" class="quick-link-card">
+                    <i class="fas fa-bed"></i>
+                    <span>Manage Bookings</span>
+                </a>
+                <a asp-action="Contacts" class="quick-link-card">
+                    <i class="fas fa-comments"></i>
+                    <span>View Messages</span>
+                </a>
+                <a asp-controller="Property" asp-action="Index" class="quick-link-card">
+                    <i class="fas fa-hotel"></i>
+                    <span>View Properties</span>
+                </a>
+                <a asp-controller="Home" asp-action="Index" class="quick-link-card">
+                    <i class="fas fa-home"></i>
+                    <span>View Website</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>

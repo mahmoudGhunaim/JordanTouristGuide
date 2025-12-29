@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="author" content="Mahmoud Ghunaim" />
+    <meta name="copyright" content="Copyright © @DateTime.Now.Year Mahmoud Ghunaim. All Rights Reserved." />
+    <meta name="description" content="Your Tourist Guide in Jordan - Discover hotels, experiences, and attractions in Jordan" />
+    <title>@ViewData["Title"] - Your Tourist Guide in Jordan</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="container">
+                <a class="navbar-brand" asp-controller="Home" asp-action="Index">
+                    <span class="logo-text">Your Tourist Guide in Jordan</span>
+                </a>
+                <ul class="nav-menu">
+                    <li><a asp-controller="Home" asp-action="Index" class="nav-link">Home</a></li>
+                    <li><a asp-controller="Property" asp-action="Index" class="nav-link">Properties</a></li>
+                    <li><a asp-controller="Experience" asp-action="Index" class="nav-link">Experiences</a></li>
+                    <li><a asp-controller="Contact" asp-action="Index" class="nav-link">Contact Us</a></li>
+                    @if (User.Identity?.IsAuthenticated == true)
+                    {
+                        <li><a asp-controller="Dashboard" asp-action="Index" class="nav-link"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li><a asp-controller="Dashboard" asp-action="Admin" class="nav-link nav-link-admin"><i class="fas fa-user-shield"></i> Admin</a></li>
+                        }
+                        <li class="nav-user">
+                            <form asp-controller="Account" asp-action="Logout" method="post" id="logoutForm">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="nav-link btn-logout"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                            </form>
+                        </li>
+                    }
+                    else
+                    {
+                        <li><a asp-controller="Account" asp-action="Login" class="nav-link nav-link-login"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+                    }
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main role="main">
+        @RenderBody()
+    </main>
+
+    <footer>
+        <div class="footer-main">
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-section footer-about">
+                        <h3 class="footer-logo">Your Tourist Guide in Jordan</h3>
+                        <p class="footer-description">Discover the beauty and wonders of Jordan. Your gateway to exploring ancient history, natural beauty, and unforgettable experiences.</p>
+                        <div class="footer-social">
+                            <a href="https://www.linkedin.com/in/mahmoud-ghunaim-01b658335" target="_blank" class="social-link" title="LinkedIn">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="footer-section">
+                        <h4 class="footer-title">Quick Links</h4>
+                        <ul class="footer-links">
+                            <li><a asp-controller="Home" asp-action="Index"><i class="fas fa-chevron-right"></i> Home</a></li>
+                            <li><a asp-controller="Property" asp-action="Index"><i class="fas fa-chevron-right"></i> Properties</a></li>
+                            <li><a asp-controller="Experience" asp-action="Index"><i class="fas fa-chevron-right"></i> Experiences</a></li>
+                            <li><a asp-controller="Contact" asp-action="Index"><i class="fas fa-chevron-right"></i> Contact Us</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-section">
+                        <h4 class="footer-title">Contact Info</h4>
+                        <ul class="footer-contact">
+                            <li>
+                                <i class="fas fa-phone-alt"></i>
+                                <div class="contact-details">
+                                    <span class="contact-label">Phone</span>
+                                    <a href="tel:+962789995755">+962 78 999 5755</a>
+                                </div>
+                            </li>
+                            <li>
+                                <i class="fas fa-envelope"></i>
+                                <div class="contact-details">
+                                    <span class="contact-label">Email</span>
+                                    <a href="mailto:Mahmoudghunaim132@gmail.com">Mahmoudghunaim132@gmail.com</a>
+                                </div>
+                            </li>
+                            <li>
+                                <i class="fas fa-map-marker-alt"></i>
+                                <div class="contact-details">
+                                    <span class="contact-label">Location</span>
+                                    <span>Amman, Jordan</span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="container">
+                <div class="footer-bottom-content">
+                    <p class="copyright">&copy; @DateTime.Now.Year Your Tourist Guide in Jordan. All Rights Reserved.</p>
+                    <p class="developer">Designed & Developed by <strong>Mahmoud Ghunaim</strong></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="~/js/site.js"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

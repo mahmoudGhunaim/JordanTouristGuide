@@ -1,0 +1,60 @@
+@model List<JordanTouristGuide.Models.Property>
+
+@{
+    ViewData["Title"] = "Properties";
+}
+
+<section class="section">
+    <div class="container">
+        <h1 class="section-title">Discover Hotels in Jordan</h1>
+        <p style="text-align: center; color: var(--text-gray); margin-bottom: 3rem;">
+            Find the perfect accommodation for your Jordan adventure
+        </p>
+
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success" style="background-color: #d4edda; border: 1px solid #c3e6cb; padding: 1rem; border-radius: 5px; margin-bottom: 2rem; color: #155724;">
+                @TempData["Success"]
+            </div>
+        }
+
+        @if (Model.Any())
+        {
+            <div class="grid grid-3">
+                @foreach (var property in Model)
+                {
+                    <div class="card">
+                        <img src="@property.ImageUrl" alt="@property.Name" class="card-image" onerror="this.src='/images/placeholder.jpg'">
+                        <div class="card-content">
+                            <h3 class="card-title">@property.Name</h3>
+                            <p style="color: var(--primary-gold); margin-bottom: 0.5rem;">
+                                <strong>@property.Location</strong> • <i class="fas fa-star"></i> @property.Rating.ToString("0.0")
+                            </p>
+                            <p class="card-text">@(property.Description.Length > 120 ? property.Description.Substring(0, 120) + "..." : property.Description)</p>
+                            <p class="card-price">$@property.PricePerNight / night</p>
+                            <a asp-controller="Property" asp-action="Detail" asp-route-id="@property.Id" class="btn" style="width: 100%; text-align: center;">
+                                View Details
+                            </a>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="empty-state" style="text-align: center; padding: 60px 20px;">
+                <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1.5">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                </svg>
+                <h3 style="color: #666; margin: 20px 0 10px;">No Properties Available</h3>
+                <p style="color: #999;">Check back soon for new listings!</p>
+            </div>
+        }
+    </div>
+</section>
+
+<style>
+    .alert-success {
+        animation: slideDown 0.5s ease;
+    }
+</style>

@@ -1,0 +1,123 @@
+@model JordanTouristGuide.Models.Property
+
+@{
+    ViewData["Title"] = Model.Name;
+    var amenitiesList = !string.IsNullOrEmpty(Model.Amenities)
+        ? Model.Amenities.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(a => a.Trim()).ToList()
+        : new List<string>();
+}
+
+<section class="section">
+    <div class="container">
+        <div class="property-detail">
+            <img src="@Model.ImageUrl" alt="@Model.Name" class="property-image" onerror="this.src='/images/placeholder.jpg'">
+            <div class="property-info">
+                <h1 style="color: var(--primary-dark); margin-bottom: 0.5rem;">@Model.Name</h1>
+                <p style="color: var(--primary-gold); font-size: 1.2rem; margin-bottom: 1rem;">
+                    <strong>@Model.Location</strong> • <i class="fas fa-star"></i> @Model.Rating.ToString("0.0")
+                </p>
+                <p style="margin-bottom: 1.5rem; color: var(--text-gray); line-height: 1.8;">
+                    @Model.Description
+                </p>
+
+                @if (!string.IsNullOrEmpty(Model.Address))
+                {
+                    <div style="background-color: var(--bg-light); padding: 1.5rem; border-radius: 10px; margin-bottom: 1.5rem;">
+                        <h3 style="color: var(--primary-dark); margin-bottom: 1rem;"><i class="fas fa-map-marker-alt"></i> Address</h3>
+                        <p style="color: var(--text-gray);">@Model.Address</p>
+                    </div>
+                }
+
+                @if (amenitiesList.Any())
+                {
+                    <h3 style="color: var(--primary-dark); margin-bottom: 1rem;"><i class="fas fa-sparkles"></i> Amenities</h3>
+                    <div class="property-amenities">
+                        @foreach (var amenity in amenitiesList)
+                        {
+                            <span class="amenity-tag"><i class="fas fa-check"></i> @amenity</span>
+                        }
+                    </div>
+                }
+
+                <div style="background-color: var(--primary-gold); padding: 2rem; border-radius: 10px; text-align: center; margin-top: 2rem;">
+                    <h2 style="color: var(--primary-dark); margin-bottom: 0.5rem;">$@Model.PricePerNight</h2>
+                    <p style="color: var(--primary-dark); margin-bottom: 1.5rem;">per night</p>
+                    <button onclick="openModal('bookingModal')" class="btn" style="background-color: var(--primary-dark); color: var(--primary-gold); border-color: var(--primary-dark);">
+                        Book Now
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-top: 2rem;">
+            <a asp-controller="Property" asp-action="Index" class="btn btn-secondary">← Back to Properties</a>
+        </div>
+    </div>
+</section>
+
+<!-- Booking Modal -->
+<div id="bookingModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('bookingModal')">&times;</span>
+        <h2 style="color: var(--primary-dark); margin-bottom: 1.5rem;">Book @Model.Name</h2>
+
+        <form asp-controller="Property" asp-action="BookNow" method="post">
+            <input type="hidden" name="HotelName" value="@Model.Name" />
+            <input type="hidden" name="PropertyId" value="@Model.Id" />
+
+            <div class="form-group">
+                <label class="form-label">Full Name *</label>
+                <input type="text" name="FullName" class="form-control" required />
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Email *</label>
+                <input type="email" name="Email" class="form-control" required />
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Phone Number *</label>
+                <input type="tel" name="Phone" class="form-control" required />
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Check-in Date *</label>
+                <input type="date" name="CheckInDate" class="form-control" min="@DateTime.Now.ToString("yyyy-MM-dd")" required />
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Check-out Date *</label>
+                <input type="date" name="CheckOutDate" class="form-control" min="@DateTime.Now.AddDays(1).ToString("yyyy-MM-dd")" required />
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Number of Guests *</label>
+                <input type="number" name="NumberOfGuests" class="form-control" min="1" max="10" value="2" required />
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Special Requests</label>
+                <textarea name="SpecialRequests" class="form-control" rows="3"></textarea>
+            </div>
+
+            <button type="submit" class="btn" style="width: 100%;">Submit Booking Request</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Set minimum dates for date inputs
+        document.addEventListener('DOMContentLoaded', function() {
+            const checkIn = document.querySelector('input[name="CheckInDate"]');
+            const checkOut = document.querySelector('input[name="CheckOutDate"]');
+
+            checkIn.addEventListener('change', function() {
+                const checkInDate = new Date(this.value);
+                const minCheckOut = new Date(checkInDate);
+                minCheckOut.setDate(minCheckOut.getDate() + 1);
+                checkOut.min = minCheckOut.toISOString().split('T')[0];
+            });
+        });
+    </script>
+}

@@ -1,0 +1,55 @@
+@{
+    ViewData["Title"] = "Admin Login";
+}
+
+<section class="login-section">
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <i class="fas fa-user-shield"></i>
+                <h1>Admin Login</h1>
+                <p>Enter your password to access the dashboard</p>
+            </div>
+
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-error">
+                    <i class="fas fa-exclamation-circle"></i>
+                    @TempData["Error"]
+                </div>
+            }
+
+            @if (TempData["Success"] != null)
+            {
+                <div class="alert alert-success">
+                    <i class="fas fa-check-circle"></i>
+                    @TempData["Success"]
+                </div>
+            }
+
+            <form asp-action="Login" method="post" class="login-form">
+                <div class="form-group">
+                    <label class="form-label" for="password">
+                        <i class="fas fa-lock"></i> Password
+                    </label>
+                    <input type="password"
+                           id="password"
+                           name="password"
+                           class="form-control"
+                           placeholder="Enter admin password"
+                           required
+                           autofocus />
+                </div>
+                <button type="submit" class="btn btn-login">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </button>
+            </form>
+
+            <div class="login-footer">
+                <a asp-controller="Home" asp-action="Index">
+                    <i class="fas fa-arrow-left"></i> Back to Website
+                </a>
+            </div>
+        </div>
+    </div>
+</section>

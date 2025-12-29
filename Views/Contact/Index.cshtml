@@ -1,0 +1,123 @@
+@model JordanTouristGuide.Models.Contact
+
+@{
+    ViewData["Title"] = "Contact Us";
+}
+
+<section class="section">
+    <div class="container">
+        <h1 class="section-title">Get in Touch</h1>
+        <p style="text-align: center; color: var(--text-gray); margin-bottom: 3rem;">
+            Have questions about your trip to Jordan? We're here to help!
+        </p>
+
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success" style="background-color: #d4edda; border: 1px solid #c3e6cb; padding: 1rem; border-radius: 5px; margin-bottom: 2rem; color: #155724; text-align: center; animation: slideDown 0.5s ease;">
+                @TempData["Success"]
+            </div>
+        }
+
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-error" style="background-color: #f8d7da; border: 1px solid #f5c6cb; padding: 1rem; border-radius: 5px; margin-bottom: 2rem; color: #721c24; text-align: center;">
+                @TempData["Error"]
+            </div>
+        }
+
+        <div style="max-width: 800px; margin: 0 auto;">
+            <div class="card" style="box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                <div class="card-content" style="padding: 3rem;">
+                    <form asp-controller="Contact" asp-action="Submit" method="post">
+                        <div class="form-group">
+                            <label class="form-label" asp-for="FullName">Full Name *</label>
+                            <input type="text" class="form-control" asp-for="FullName" placeholder="Enter your full name" required />
+                            <span asp-validation-for="FullName" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" asp-for="Email">Email Address *</label>
+                            <input type="email" class="form-control" asp-for="Email" placeholder="your.email@example.com" required />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" asp-for="Phone">Phone Number *</label>
+                            <input type="tel" class="form-control" asp-for="Phone" placeholder="+962 XX XXX XXXX" required />
+                            <span asp-validation-for="Phone" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" asp-for="Subject">Subject *</label>
+                            <input type="text" class="form-control" asp-for="Subject" placeholder="What is your inquiry about?" required />
+                            <span asp-validation-for="Subject" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" asp-for="Message">Message *</label>
+                            <textarea class="form-control" asp-for="Message" rows="6" placeholder="Tell us more about your inquiry..." required></textarea>
+                            <span asp-validation-for="Message" class="text-danger"></span>
+                        </div>
+
+                        <button type="submit" class="btn" style="width: 100%; padding: 1rem; font-size: 1.1rem;">
+                            Send Message
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section" style="background-color: var(--bg-light);">
+    <div class="container">
+        <h2 class="section-title">Contact Information</h2>
+        <div class="grid grid-3">
+            <div class="card">
+                <div class="card-content" style="text-align: center;">
+                    <div style="font-size: 3rem; color: var(--primary-gold); margin-bottom: 1rem;">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <h3 style="color: var(--primary-dark); margin-bottom: 0.5rem;">Email</h3>
+                    <p style="color: var(--text-gray); word-break: break-word;">
+                        <a href="mailto:Mahmoudghunaim132@gmail.com" style="color: var(--text-gray); text-decoration: none;">
+                            Mahmoudghunaim132@gmail.com
+                        </a>
+                    </p>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-content" style="text-align: center;">
+                    <div style="font-size: 3rem; color: var(--primary-gold); margin-bottom: 1rem;">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <h3 style="color: var(--primary-dark); margin-bottom: 0.5rem;">Phone</h3>
+                    <p style="color: var(--text-gray);">
+                        <a href="tel:+962789995755" style="color: var(--text-gray); text-decoration: none;">
+                            +962 78 999 5755
+                        </a>
+                    </p>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-content" style="text-align: center;">
+                    <div style="font-size: 3rem; color: var(--primary-gold); margin-bottom: 1rem;">
+                        <i class="fab fa-linkedin"></i>
+                    </div>
+                    <h3 style="color: var(--primary-dark); margin-bottom: 0.5rem;">LinkedIn</h3>
+                    <p style="color: var(--text-gray);">
+                        <a href="https://www.linkedin.com/in/mahmoud-ghunaim-01b658335" target="_blank" style="color: var(--text-gray); text-decoration: none;">
+                            Mahmoud Ghunaim
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

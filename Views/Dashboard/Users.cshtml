@@ -1,0 +1,285 @@
+@model List<JordanTouristGuide.Controllers.UserViewModel>
+@{
+    ViewData["Title"] = "Manage Users";
+}
+
+<div class="manage-page">
+    <div class="manage-container">
+        <div class="page-header">
+            <h1>Manage Users</h1>
+            <p>View all users and manage their roles</p>
+        </div>
+
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success">@TempData["Success"]</div>
+        }
+
+        @if (Model.Any())
+        {
+            <div class="users-grid">
+                @foreach (var user in Model)
+                {
+                    <div class="user-card">
+                        <div class="user-avatar">
+                            @if (!string.IsNullOrEmpty(user.ProfilePictureUrl))
+                            {
+                                <img src="@user.ProfilePictureUrl" alt="@user.FullName" referrerpolicy="no-referrer" />
+                            }
+                            else
+                            {
+                                <div class="avatar-placeholder">
+                                    @(user.FullName?.Substring(0, 1).ToUpper() ?? "U")
+                                </div>
+                            }
+                        </div>
+                        <div class="user-info">
+                            <h3>@user.FullName</h3>
+                            <p class="email">@user.Email</p>
+                            <p class="joined">Joined: @user.CreatedAt.ToString("MMM dd, yyyy")</p>
+                            <div class="roles">
+                                @foreach (var role in user.Roles)
+                                {
+                                    <span class="role role-@role.ToLower()">@role</span>
+                                }
+                            </div>
+                        </div>
+                        <div class="user-actions">
+                            <form asp-action="ToggleAdmin" method="post">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="userId" value="@user.Id" />
+                                @if (user.Roles.Contains("Admin"))
+                                {
+                                    <button type="submit" class="btn-demote" onclick="return confirm('Are you sure you want to remove admin rights from this user?');">
+                                        Remove Admin
+                                    </button>
+                                }
+                                else
+                                {
+                                    <button type="submit" class="btn-promote">
+                                        Make Admin
+                                    </button>
+                                }
+                            </form>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="empty-state">
+                <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1.5">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                    <circle cx="9" cy="7" r="4"/>
+                </svg>
+                <h3>No Users Yet</h3>
+                <p>Users will appear here when they sign up.</p>
+            </div>
+        }
+
+        <div class="back-link">
+            <a asp-controller="Dashboard" asp-action="Admin">Back to Admin Dashboard</a>
+        </div>
+    </div>
+</div>
+
+<style>
+    .manage-page {
+        background: #f5f5f5;
+        min-height: calc(100vh - 100px);
+        padding: 40px 20px;
+    }
+
+    .manage-container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .page-header {
+        margin-bottom: 30px;
+    }
+
+    .page-header h1 {
+        margin: 0 0 5px;
+        color: #222933;
+    }
+
+    .page-header p {
+        margin: 0;
+        color: #666;
+    }
+
+    .alert-success {
+        background: #d4edda;
+        color: #155724;
+        padding: 15px 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        border-left: 4px solid #28a745;
+    }
+
+    .users-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 25px;
+    }
+
+    .user-card {
+        background: white;
+        border-radius: 12px;
+        padding: 25px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        transition: all 0.3s ease;
+    }
+
+    .user-card:hover {
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    }
+
+    .user-avatar {
+        margin-bottom: 15px;
+    }
+
+    .user-avatar img {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid #ac9576;
+    }
+
+    .avatar-placeholder {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: #ac9576;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        font-weight: 600;
+    }
+
+    .user-info {
+        flex: 1;
+    }
+
+    .user-info h3 {
+        margin: 0 0 5px;
+        color: #222933;
+    }
+
+    .user-info .email {
+        color: #666;
+        margin: 0 0 5px;
+        font-size: 0.9rem;
+    }
+
+    .user-info .joined {
+        color: #999;
+        margin: 0 0 15px;
+        font-size: 0.85rem;
+    }
+
+    .roles {
+        display: flex;
+        gap: 8px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .role {
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 500;
+    }
+
+    .role-admin {
+        background: #ffeaa7;
+        color: #d68910;
+    }
+
+    .role-user {
+        background: #dfe6e9;
+        color: #636e72;
+    }
+
+    .user-actions {
+        margin-top: 20px;
+        padding-top: 15px;
+        border-top: 1px solid #eee;
+        width: 100%;
+    }
+
+    .btn-promote, .btn-demote {
+        width: 100%;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .btn-promote {
+        background: #ac9576;
+        color: white;
+    }
+
+    .btn-promote:hover {
+        background: #8a7860;
+    }
+
+    .btn-demote {
+        background: #dc3545;
+        color: white;
+    }
+
+    .btn-demote:hover {
+        background: #c82333;
+    }
+
+    .empty-state {
+        background: white;
+        padding: 60px 30px;
+        text-align: center;
+        border-radius: 12px;
+    }
+
+    .empty-state h3 {
+        color: #666;
+        margin: 20px 0 10px;
+    }
+
+    .empty-state p {
+        color: #999;
+    }
+
+    .back-link {
+        margin-top: 30px;
+        text-align: center;
+    }
+
+    .back-link a {
+        color: #ac9576;
+        text-decoration: none;
+    }
+
+    .back-link a:hover {
+        text-decoration: underline;
+    }
+
+    @@media (max-width: 480px) {
+        .users-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
