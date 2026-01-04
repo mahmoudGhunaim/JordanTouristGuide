@@ -292,3 +292,4 @@ namespace JordanTouristGuide.Controllers
         public List<string> Roles { get; set; } = new();
     }
 }
+ 
